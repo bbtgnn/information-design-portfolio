@@ -1,19 +1,19 @@
 sections:
-  - title: "Dashboard design"
+  - title: 'Dashboard design'
     items:
-      - "dashboard-1.svg"
-      - "dashboard-2.svg"
-  - title: "Project management"
+      - 'dashboard-1.svg'
+      - 'dashboard-2.svg'
+  - title: 'Project management'
     items:
-      - "project-1.png"
-      - "napoli-planning.svg"
-  - title: "Teaching"
+      - 'project-1.png'
+      - 'napoli-planning.svg'
+  - title: 'Teaching'
     items:
-      - "web.gif"
-      - "coding-introduction.svg"
-  - title: "Text analysis"
+      - 'web.gif'
+      - 'coding-introduction.svg'
+  - title: 'Text analysis'
     items:
-      - "text-analysis.png"
-  - title: "Web development"
+      - 'text-analysis.png'
+  - title: 'Web development'
     items:
-      - "webapp.png"
+      - 'webapp.png'

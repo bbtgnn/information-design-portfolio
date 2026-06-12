@@ -10,17 +10,17 @@ A mobile-first gallery page for landscape iPhone 12 mini that displays all image
 
 ## Requirements Summary
 
-| Decision | Choice |
-|---|---|
-| Framework | SvelteKit 5, static adapter, full prerender |
-| Content source | `src/lib/content/data.yaml` + co-located media files |
-| Navigation | Vertical scroll-snap, one slide per image |
-| Section titles | Sticky small label at top |
-| Initial image fit | Contain with side margins |
-| Pan/zoom | `@panzoom/panzoom` (npm) |
-| YAML parsing | `yaml` package (npm) |
-| Route | `/` (replaces default welcome page) |
-| Publishing | [GitHub Pages guide](https://svelte.dev/docs/kit/adapter-static#GitHub-Pages) |
+| Decision          | Choice                                                                        |
+| ----------------- | ----------------------------------------------------------------------------- |
+| Framework         | SvelteKit 5, static adapter, full prerender                                   |
+| Content source    | `src/lib/content/data.yaml` + co-located media files                          |
+| Navigation        | Vertical scroll-snap, one slide per image                                     |
+| Section titles    | Sticky small label at top                                                     |
+| Initial image fit | Contain with side margins                                                     |
+| Pan/zoom          | `@panzoom/panzoom` (npm)                                                      |
+| YAML parsing      | `yaml` package (npm)                                                          |
+| Route             | `/` (replaces default welcome page)                                           |
+| Publishing        | [GitHub Pages guide](https://svelte.dev/docs/kit/adapter-static#GitHub-Pages) |
 
 ## Layout & Scroll
 
@@ -50,6 +50,7 @@ A mobile-first gallery page for landscape iPhone 12 mini that displays all image
 **Library:** `@panzoom/panzoom` — pointer events, pinch-to-zoom on iOS, CSS transforms.
 
 **DOM per slide:**
+
 ```
 .slide (100dvh, scroll-snap-align: start, overflow: hidden)
   └── .pan-stage (fills slide below label, touch-action toggled)
@@ -58,12 +59,13 @@ A mobile-first gallery page for landscape iPhone 12 mini that displays all image
 
 **Gesture rules:**
 
-| State | Vertical swipe | Pinch | Drag |
-|---|---|---|---|
-| Zoom = 1× | Scrolls to next/prev slide | Zooms in | Ignored |
-| Zoom > 1× | Pans image | Zooms | Pans image |
+| State     | Vertical swipe             | Pinch    | Drag       |
+| --------- | -------------------------- | -------- | ---------- |
+| Zoom = 1× | Scrolls to next/prev slide | Zooms in | Ignored    |
+| Zoom > 1× | Pans image                 | Zooms    | Pans image |
 
 **Options:**
+
 - `minScale`: 1 (cannot zoom below fit)
 - `maxScale`: 4
 - `startScale`: computed on image `load` so image fits contain inside stage
@@ -103,14 +105,16 @@ src/routes/
 ```
 
 **`data.yaml` schema:**
+
 ```yaml
 sections:
   - title: string
     items:
-      - filename string  # basename only, resolved against src/lib/content/
+      - filename string # basename only, resolved against src/lib/content/
 ```
 
 **Load function (`+page.ts`):**
+
 1. Import `data.yaml` as raw (`?raw`).
 2. Parse with `yaml` package.
 3. Resolve filenames via `import.meta.glob('$lib/content/*.{svg,png,gif,webp,jpg,jpeg}', { eager: true, query: '?url', import: 'default' })`.
@@ -122,6 +126,7 @@ sections:
 Per [SvelteKit adapter-static GitHub Pages docs](https://svelte.dev/docs/kit/adapter-static#GitHub-Pages).
 
 **`vite.config.ts`:**
+
 ```ts
 adapter({
   fallback: '404.html'
@@ -136,6 +141,7 @@ kit: {
 **`static/.nojekyll`:** empty file to disable Jekyll.
 
 **`.github/workflows/deploy.yml`:**
+
 - Trigger: push to `main`
 - `bun install` → `bun run build` with `BASE_PATH: '/${{ github.event.repository.name }}'`
 - Upload `build/` → `actions/deploy-pages@v4`

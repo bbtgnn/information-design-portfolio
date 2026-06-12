@@ -14,25 +14,26 @@
 
 ## File map
 
-| File | Responsibility |
-|---|---|
-| `src/lib/gallery/types.ts` | `GalleryItem`, `GallerySection`, `GalleryData` types |
-| `src/lib/gallery/parse.ts` | Parse YAML + resolve filenames to URLs |
-| `src/lib/gallery/parse.spec.ts` | Unit tests for parse logic |
-| `src/lib/components/gallery/SectionLabel.svelte` | Sticky section title bar |
-| `src/lib/components/gallery/GallerySlide.svelte` | One slide + Panzoom lifecycle |
-| `src/routes/+layout.ts` | `export const prerender = true` |
-| `src/routes/+page.ts` | Load gallery data |
-| `src/routes/+page.svelte` | Scroll container, sentinels, label state |
-| `vite.config.ts` | `fallback: '404.html'`, `paths.base` for GitHub Pages |
-| `static/.nojekyll` | Disable Jekyll on GitHub Pages |
-| `.github/workflows/deploy.yml` | CI build + deploy |
+| File                                             | Responsibility                                        |
+| ------------------------------------------------ | ----------------------------------------------------- |
+| `src/lib/gallery/types.ts`                       | `GalleryItem`, `GallerySection`, `GalleryData` types  |
+| `src/lib/gallery/parse.ts`                       | Parse YAML + resolve filenames to URLs                |
+| `src/lib/gallery/parse.spec.ts`                  | Unit tests for parse logic                            |
+| `src/lib/components/gallery/SectionLabel.svelte` | Sticky section title bar                              |
+| `src/lib/components/gallery/GallerySlide.svelte` | One slide + Panzoom lifecycle                         |
+| `src/routes/+layout.ts`                          | `export const prerender = true`                       |
+| `src/routes/+page.ts`                            | Load gallery data                                     |
+| `src/routes/+page.svelte`                        | Scroll container, sentinels, label state              |
+| `vite.config.ts`                                 | `fallback: '404.html'`, `paths.base` for GitHub Pages |
+| `static/.nojekyll`                               | Disable Jekyll on GitHub Pages                        |
+| `.github/workflows/deploy.yml`                   | CI build + deploy                                     |
 
 ---
 
 ### Task 1: Commit design spec
 
 **Files:**
+
 - Add: `docs/superpowers/specs/2026-06-12-gallery-viewer-design.md`
 
 - [ ] **Step 1: Stage and commit design spec**
@@ -51,6 +52,7 @@ EOF
 ### Task 2: Install dependencies
 
 **Files:**
+
 - Modify: `package.json`, `bun.lock`
 
 - [ ] **Step 1: Install runtime packages**
@@ -77,6 +79,7 @@ EOF
 ### Task 3: Gallery types and parse module (TDD)
 
 **Files:**
+
 - Create: `src/lib/gallery/types.ts`
 - Create: `src/lib/gallery/parse.ts`
 - Create: `src/lib/gallery/parse.spec.ts`
@@ -125,9 +128,7 @@ sections:
     items:
       - ghost.png
 `;
-		expect(() => parseGalleryYaml(raw, urlMap)).toThrow(
-			'Missing content file: ghost.png'
-		);
+		expect(() => parseGalleryYaml(raw, urlMap)).toThrow('Missing content file: ghost.png');
 	});
 
 	it('returns empty sections array for empty yaml', () => {
@@ -242,6 +243,7 @@ EOF
 ### Task 4: Prerender layout and page load
 
 **Files:**
+
 - Create: `src/routes/+layout.ts`
 - Create: `src/routes/+page.ts`
 
@@ -292,6 +294,7 @@ EOF
 ### Task 5: SectionLabel component
 
 **Files:**
+
 - Create: `src/lib/components/gallery/SectionLabel.svelte`
 
 - [ ] **Step 1: Create sticky label component**
@@ -337,6 +340,7 @@ EOF
 ### Task 6: GallerySlide component with Panzoom
 
 **Files:**
+
 - Create: `src/lib/components/gallery/GallerySlide.svelte`
 
 - [ ] **Step 1: Create slide component**
@@ -478,6 +482,7 @@ EOF
 ### Task 7: Main gallery page
 
 **Files:**
+
 - Modify: `src/routes/+page.svelte`
 - Modify: `src/routes/layout.css` (optional overflow reset)
 
@@ -522,11 +527,11 @@ Replace `src/routes/+page.svelte` with:
 </script>
 
 {#if slides.length === 0}
-	<main class="flex h-dvh items-center justify-center bg-[#111] text-white/70">
-		No content
-	</main>
+	<main class="flex h-dvh items-center justify-center bg-[#111] text-white/70">No content</main>
 {:else}
-	<main class="gallery-scroll h-dvh snap-y snap-mandatory overflow-y-auto overscroll-y-contain bg-[#111]">
+	<main
+		class="gallery-scroll h-dvh snap-y snap-mandatory overflow-y-auto overscroll-y-contain bg-[#111]"
+	>
 		<SectionLabel title={activeTitle} />
 
 		{#each slides as slide (slide.item.filename)}
@@ -568,6 +573,7 @@ bun run dev
 ```
 
 Open `http://localhost:5173` with DevTools device emulation set to iPhone 12 mini landscape (812×375). Verify:
+
 - Vertical scroll snaps between images
 - Sticky label updates per section
 - Pinch zoom and double-tap work
@@ -589,6 +595,7 @@ EOF
 ### Task 8: GitHub Pages config
 
 **Files:**
+
 - Modify: `vite.config.ts`
 - Create: `static/.nojekyll`
 - Create: `.github/workflows/deploy.yml`
@@ -598,18 +605,17 @@ EOF
 Replace the `sveltekit({...})` block in `vite.config.ts` with:
 
 ```ts
-		sveltekit({
-			compilerOptions: {
-				runes: ({ filename }) =>
-					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
-			},
-			adapter: adapter({ fallback: '404.html' }),
-			kit: {
-				paths: {
-					base: process.argv.includes('dev') ? '' : (process.env.BASE_PATH ?? '')
-				}
-			}
-		})
+sveltekit({
+	compilerOptions: {
+		runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true)
+	},
+	adapter: adapter({ fallback: '404.html' }),
+	kit: {
+		paths: {
+			base: process.argv.includes('dev') ? '' : (process.env.BASE_PATH ?? '')
+		}
+	}
+});
 ```
 
 - [ ] **Step 2: Add `.nojekyll`**
@@ -729,19 +735,19 @@ EOF
 
 ## Spec coverage checklist
 
-| Spec requirement | Task |
-|---|---|
-| SvelteKit static + prerender | Task 4, 8 |
-| `src/lib/content/data.yaml` + assets | Task 3, 4 (glob resolves co-located files) |
-| Vertical scroll-snap | Task 7 |
-| Sticky section label | Task 5, 7 |
-| Contain fit + side margins | Task 6 (CSS `max-w-full`, `px-[5%]`) |
-| `@panzoom/panzoom` gestures | Task 6 |
-| Double-tap zoom / reset | Task 6 |
-| Reset on slide leave | Task 6 (IntersectionObserver) |
-| Missing asset build failure | Task 3 (`parseGalleryYaml` throw) |
-| Empty yaml handling | Task 3 test + Task 7 empty state |
-| Image load error UI | Task 6 |
-| GitHub Pages base path + 404 fallback | Task 8 |
-| `.nojekyll` | Task 8 |
-| CI deploy workflow | Task 8 |
+| Spec requirement                      | Task                                       |
+| ------------------------------------- | ------------------------------------------ |
+| SvelteKit static + prerender          | Task 4, 8                                  |
+| `src/lib/content/data.yaml` + assets  | Task 3, 4 (glob resolves co-located files) |
+| Vertical scroll-snap                  | Task 7                                     |
+| Sticky section label                  | Task 5, 7                                  |
+| Contain fit + side margins            | Task 6 (CSS `max-w-full`, `px-[5%]`)       |
+| `@panzoom/panzoom` gestures           | Task 6                                     |
+| Double-tap zoom / reset               | Task 6                                     |
+| Reset on slide leave                  | Task 6 (IntersectionObserver)              |
+| Missing asset build failure           | Task 3 (`parseGalleryYaml` throw)          |
+| Empty yaml handling                   | Task 3 test + Task 7 empty state           |
+| Image load error UI                   | Task 6                                     |
+| GitHub Pages base path + 404 fallback | Task 8                                     |
+| `.nojekyll`                           | Task 8                                     |
+| CI deploy workflow                    | Task 8                                     |
