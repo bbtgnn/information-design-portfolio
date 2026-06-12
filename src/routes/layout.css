@@ -1,3 +1,15 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+html,
+body {
+	height: 100%;
+	overflow: hidden;
+	background: #111;
+}
+
+.gallery-scroll {
+	scroll-snap-type: y mandatory;
+	-webkit-overflow-scrolling: touch;
+}
