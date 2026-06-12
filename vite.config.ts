@@ -3,8 +3,18 @@ import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { fileURLToPath } from 'node:url';
+
+const panzoomEsm = fileURLToPath(
+	new URL('./node_modules/@panzoom/panzoom/dist/panzoom.es.js', import.meta.url)
+);
 
 export default defineConfig({
+	resolve: {
+		alias: {
+			'@panzoom/panzoom': panzoomEsm
+		}
+	},
 	plugins: [
 		tailwindcss(),
 		sveltekit({

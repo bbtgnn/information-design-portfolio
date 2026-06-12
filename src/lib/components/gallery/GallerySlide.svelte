@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Panzoom from '@panzoom/panzoom';
+	import type { PanzoomGlobalOptions, PanzoomObject } from '@panzoom/panzoom';
 	import type { GalleryItem } from '$lib/gallery/types';
 
 	let {
@@ -14,7 +14,7 @@
 	let stageEl = $state<HTMLDivElement | null>(null);
 	let imgEl = $state<HTMLImageElement | null>(null);
 	let loadError = $state(false);
-	let panzoomInstance: ReturnType<typeof Panzoom> | null = null;
+	let panzoomInstance: PanzoomObject | null = null;
 	let lastTap = 0;
 
 	function updatePanEnabled() {
@@ -51,19 +51,35 @@
 	}
 
 	onMount(() => {
-		if (!stageEl || !imgEl) return;
+		const stage = stageEl;
+		const img = imgEl;
+		if (!stage || !img) return;
 
-		panzoomInstance = Panzoom(imgEl, {
-			maxScale: 4,
-			minScale: 1,
-			contain: 'inside',
-			disablePan: true,
-			touchAction: 'pan-y'
+		let cancelled = false;
+		let onEnd: (() => void) | undefined;
+
+		import('@panzoom/panzoom').then((mod) => {
+			if (cancelled) return;
+
+			type PanzoomFactory = (
+				elem: HTMLElement,
+				options?: PanzoomGlobalOptions
+			) => PanzoomObject;
+			const Panzoom = (mod as { default: PanzoomFactory }).default;
+			panzoomInstance = Panzoom(img, {
+				maxScale: 4,
+				minScale: 1,
+				contain: 'inside',
+				disablePan: true,
+				touchAction: 'pan-y'
+			});
+
+			onEnd = () => updatePanEnabled();
+			img.addEventListener('panzoomend', onEnd);
+			img.addEventListener('panzoomchange', onEnd);
+
+			if (img.complete) handleImageLoad();
 		});
-
-		const onEnd = () => updatePanEnabled();
-		imgEl.addEventListener('panzoomend', onEnd);
-		imgEl.addEventListener('panzoomchange', onEnd);
 
 		const observer = new IntersectionObserver(
 			([entry]) => {
@@ -73,11 +89,14 @@
 			},
 			{ threshold: 0.55 }
 		);
-		observer.observe(stageEl);
+		observer.observe(stage);
 
 		return () => {
-			imgEl?.removeEventListener('panzoomend', onEnd);
-			imgEl?.removeEventListener('panzoomchange', onEnd);
+			cancelled = true;
+			if (onEnd) {
+				img.removeEventListener('panzoomend', onEnd);
+				img.removeEventListener('panzoomchange', onEnd);
+			}
 			observer.disconnect();
 			panzoomInstance?.destroy();
 			panzoomInstance = null;
