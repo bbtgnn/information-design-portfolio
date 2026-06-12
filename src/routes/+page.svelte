@@ -5,6 +5,11 @@
 
 	const gallery = $derived(data.gallery);
 	let activeTitle = $state('');
+	let scrollLocked = $state(false);
+
+	function setScrollLocked(zoomed: boolean) {
+		scrollLocked = zoomed;
+	}
 
 	$effect(() => {
 		if (!activeTitle && gallery.sections[0]) {
@@ -44,6 +49,7 @@
 {:else}
 	<main
 		class="gallery-scroll h-dvh snap-y snap-mandatory overflow-y-auto overscroll-y-contain bg-[#111]"
+		class:gallery-scroll-locked={scrollLocked}
 	>
 		<SectionLabel title={activeTitle} />
 
@@ -55,7 +61,7 @@
 					use:observeSentinel={slide.section.title}
 				></div>
 			{/if}
-			<GallerySlide item={slide.item} />
+			<GallerySlide item={slide.item} onZoomedChange={setScrollLocked} />
 		{/each}
 	</main>
 {/if}

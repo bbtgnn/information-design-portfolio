@@ -13,3 +13,8 @@ body {
 	scroll-snap-type: y mandatory;
 	-webkit-overflow-scrolling: touch;
 }
+
+.gallery-scroll-locked {
+	overflow: hidden;
+	scroll-snap-type: none;
+}
